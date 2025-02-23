@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カスタムルーレット</title>
+    <title>かわいいルーレット</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,14 +22,14 @@
             background: #fff;
         }
         .arrow {
+            font-size: 30px;
             position: absolute;
-            top: 310px;
+            top: 320px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 24px;
         }
         button {
-            margin-top: 40px;
+            margin-top: 5px;
             padding: 10px 15px;
             font-size: 16px;
             cursor: pointer;
@@ -75,7 +75,7 @@
         }
     </style>
 </head>
-<body><h1>カスタムルーレット</h1>
+<body><h1>かわいいルーレット</h1>
 
 <input type="text" id="optionInput" placeholder="選択肢を入力">
 <button onclick="addOption()">追加</button>
@@ -94,34 +94,40 @@
 <script>
     const canvas = document.getElementById("wheelCanvas");
     const ctx = canvas.getContext("2d");
-    const optionInput = document.getElementById("optionInput");
-    let options = JSON.parse(localStorage.getItem("rouletteOptions")) || [];
+    const localStorageKey = "rouletteOptions";
+    
+    let options = JSON.parse(localStorage.getItem(localStorageKey)) || [];
     const colors = ["#FF9999", "#FFDD99", "#99FF99", "#99DDFF", "#DD99FF", "#FFFF99", "#99FFFF"];
     let angle = 0;
     let spinning = false;
 
+    function saveOptions() {
+        localStorage.setItem(localStorageKey, JSON.stringify(options));
+    }
+
     function addOption() {
-        const value = optionInput.value.trim();
+        const input = document.getElementById("optionInput");
+        const value = input.value.trim();
         if (value) {
             options.push(value);
+            saveOptions();
             updateOptionList();
-            optionInput.value = "";
-            localStorage.setItem("rouletteOptions", JSON.stringify(options));
+            input.value = "";
             drawWheel();
         }
     }
 
     function removeOption(index) {
         options.splice(index, 1);
+        saveOptions();
         updateOptionList();
-        localStorage.setItem("rouletteOptions", JSON.stringify(options));
         drawWheel();
     }
 
     function resetOptions() {
         options = [];
+        saveOptions();
         updateOptionList();
-        localStorage.removeItem("rouletteOptions");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
@@ -152,6 +158,7 @@
             ctx.fillStyle = colors[i % colors.length];
             ctx.fill();
             ctx.stroke();
+
             ctx.fillStyle = "#000";
             ctx.font = "14px Arial";
             ctx.textAlign = "center";
@@ -186,6 +193,7 @@
         }
         requestAnimationFrame(animate);
     }
+
     updateOptionList();
     drawWheel();
 </script>
