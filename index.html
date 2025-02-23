@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>かわいいルーレット</title>
+    <title>カスタムルーレット</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,9 +22,9 @@
             background: #fff;
         }
         .arrow {
-            font-size: 30px;
+            font-size: 24px;
             position: absolute;
-            top: 320px;
+            top: 310px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -75,7 +75,7 @@
         }
     </style>
 </head>
-<body><h1>かわいいルーレット</h1>
+<body><h1>カスタムルーレット</h1>
 
 <input type="text" id="optionInput" placeholder="選択肢を入力">
 <button onclick="addOption()">追加</button>
@@ -94,15 +94,14 @@
 <script>
     const canvas = document.getElementById("wheelCanvas");
     const ctx = canvas.getContext("2d");
-    const localStorageKey = "rouletteOptions";
-    
-    let options = JSON.parse(localStorage.getItem(localStorageKey)) || [];
+
+    let options = JSON.parse(localStorage.getItem("options")) || [];
     const colors = ["#FF9999", "#FFDD99", "#99FF99", "#99DDFF", "#DD99FF", "#FFFF99", "#99FFFF"];
     let angle = 0;
     let spinning = false;
 
     function saveOptions() {
-        localStorage.setItem(localStorageKey, JSON.stringify(options));
+        localStorage.setItem("options", JSON.stringify(options));
     }
 
     function addOption() {
@@ -158,7 +157,6 @@
             ctx.fillStyle = colors[i % colors.length];
             ctx.fill();
             ctx.stroke();
-
             ctx.fillStyle = "#000";
             ctx.font = "14px Arial";
             ctx.textAlign = "center";
@@ -186,9 +184,8 @@
                 requestAnimationFrame(animate);
             } else {
                 spinning = false;
-                let winningIndex = Math.floor(((angle % (2 * Math.PI)) / (2 * Math.PI)) * options.length);
-                let result = options[(options.length - winningIndex) % options.length];
-                alert("結果: " + result);
+                let winningIndex = Math.floor((angle / (2 * Math.PI)) * options.length) % options.length;
+                alert("結果: " + options[winningIndex]);
             }
         }
         requestAnimationFrame(animate);
